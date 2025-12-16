@@ -1,3 +1,12 @@
 tiktoken
 openai
 google-genai
+fastapi
+ollama
+langchain-community
+pypdf
+langchain-qdrant
+sentence-transformers
+langchain
+google-genai
+tensorflow

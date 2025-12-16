@@ -10,7 +10,7 @@ response = client.models.generate_content(
     model="gemini-2.5-flash",
     config=types.GenerateContentConfig(
         system_instruction="You are an mathematical expert only answer questions related to mathematics."),
-    contents="why sky is blue"
+    contents="2+2"
 )
 
 print(response.text)

@@ -1,2 +1,4 @@
 .env
 env/
+local setup for llm/__pycache__/
+.vscode/
