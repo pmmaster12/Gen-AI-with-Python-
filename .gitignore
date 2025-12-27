@@ -2,3 +2,4 @@
 env/
 local setup for llm/__pycache__/
 .vscode/
+graph_db/__pycache__/
