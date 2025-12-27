@@ -19,6 +19,13 @@ Lec-5 (Advanced RAG - Query Translation (Multi Query, Query Decomposition, CoT, 
 notes - https://app.eraser.io/workspace/W1ItJUWco1xYkXrVLsMR
 white paper reference - https://arxiv.org/abs/2310.06117
 
+Lec-6 (Graph DB )
+notes- 
+codes - https://github.com/pmmaster12/Gen-AI-with-Python-/tree/master/graph_db
+
+Lec-7 (Tracing AI app)
+notes - 
+
         
  
 
