@@ -1,4 +1,3 @@
-```md
 # 🚀 GenAI Cohort – Lecture Notes, Code & Resources
 
 This repository contains **lecture-wise notes, code examples, research papers, and tooling references** from a **Generative AI Cohort**, covering everything from **GenAI fundamentals** to **Advanced RAG, Graph Databases, and AI App Tracing**.
@@ -162,4 +161,3 @@ This repository contains **lecture-wise notes, code examples, research papers, a
 - Piyush Garg – GenAI Cohort
 - Anthropic Research
 - Open-source community
-```
