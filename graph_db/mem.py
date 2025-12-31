@@ -1,30 +1,33 @@
 from mem0 import Memory
 import os
-from groq import Groq
+from langchain_groq import ChatGroq
 from dotenv import load_dotenv
 from config import CONFIG
+from langsmith import traceable, trace
+
 load_dotenv()
-
-GROQ_API_KEY = os.environ.get("GROQ_API_KEY")
-GEMINI_API_KEY = os.environ.get("GEMINI_API_KEY")
-QUADRANT_HOST = os.environ.get("QUADRANT_HOST")
-
-NEO4J_URL= os.environ.get("NEO4J_URL")
-NEO4J_USERNAME=os.environ.get("NEO4J_USERNAME")
-NEO4J_PASSWORD= os.environ.get("NEO4J_PASSWORD")
-
 
 mem_client = Memory.from_config(CONFIG)
 
-client = Groq(
-    api_key=os.environ.get("GROQ_API_KEY"),
+llm = ChatGroq(
+    model="openai/gpt-oss-120b",
+    temperature=0,
+    max_tokens=2000,
+    max_retries=2,
+    api_key=os.environ.get("GROQ_API_KEY")
 )
 
-def chat(message):
-    mem_result = mem_client.search(query=message, user_id="p123")
+@traceable(run_type="retriever", name="memory_search")
+def search_memories(message, user_id):
+    """Search for relevant memories - this will trace the embedding + vector search"""
+    mem_result = mem_client.search(query=message, user_id=user_id)
     results = mem_result.get("results", [])
     memories = "\n".join(m["memory"] for m in results if "memory" in m)
-    print(memories)
+    return memories, results
+
+@traceable(run_type="llm", name="generate_response")
+def generate_response(message, memories):
+    """Generate response using LLM with memory context"""
     SYSTEM_PROMPT = f"""
     You are a Memory-Aware Fact Extraction Agent.
 
@@ -33,22 +36,39 @@ def chat(message):
     """
 
     messages = [
-        {"role": "system", "content": SYSTEM_PROMPT},
-        {"role": "user", "content": message}
+        ("system", SYSTEM_PROMPT),
+        ("user", message)
     ]
 
-    response = client.chat.completions.create(
-        model="openai/gpt-oss-120b",
-        messages=messages,
-        temperature=0.1,
-        max_tokens=2000
-    )
+    response = llm.invoke(messages)
+    return response.content
 
-    answer = response.choices[0].message.content
-    messages.append({"role": "assistant", "content": answer})
-    # correct memory storage
-    mem_client.add(messages, user_id="p123")
+@traceable(run_type="tool", name="store_memory")
+def store_memory(message, answer, user_id):
+    """Store interaction in memory - traces the LLM extraction + graph/vector storage"""
+    memory_messages = [
+        {"role": "user", "content": message},
+        {"role": "assistant", "content": answer}
+    ]
+    
+    result = mem_client.add(memory_messages, user_id=user_id)
+    return result
 
+@traceable(run_type="chain", name="memory_chat_pipeline")
+def chat(message):
+    """Complete chat pipeline with memory"""
+    
+    # Step 1: Search memories (embedding + vector search)
+    memories, search_results = search_memories(message, "p123")
+    print(f"Found {len(search_results)} relevant memories")
+    print(memories)
+    
+    # Step 2: Generate response with LLM
+    answer = generate_response(message, memories)
+    
+    # Step 3: Store new memory (LLM extraction + storage)
+    storage_result = store_memory(message, answer, "p123")
+    
     return answer
 
 
@@ -58,27 +78,3 @@ while True:
         break
     response = chat(user_input)
     print("Assistant:", response)
-    
-# flow - user input -> embedding(user_input) -> vector search(embedding) -> retrieve relevant memories -> LLM with relevant memories -> generate response -> store interaction as new memory
-    # Likes pizza with cheese - llm -  user , pizza , cheese 
-    
-    # cypher quries  - nearbu 5 relation (5 level tak bfs karlo aisa kucn)
-    # llm geenrate cypher quires - match p ( user )-[r:LIKES]->(i:Item) return i.name limit 5
-    # llm context - ( chunk_text + sub_graph + user_query+ system prompt) -> openai 
-     # response
-     # response to add memory
-     # query translation - 
-     # query -  what is machine learning 
-     #  what is machine 
-     #  what is learning 
-     # what is machine learning
-     
-     # 1,2,3 1,2  2,3
-     # cot - chain of thought
-     # tree of thoughts 
-     
-     
-     
-     
-     
-    
