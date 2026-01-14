@@ -1,6 +1,6 @@
 # 🚀 GenAI Cohort – Lecture Notes, Code & Resources
 
-This repository contains **lecture-wise notes, code examples, research papers, and tooling references** from a **Generative AI Cohort**, covering everything from **GenAI fundamentals** to **Advanced RAG, Graph Databases, and AI App Tracing**.
+This repository contains **lecture-wise notes, code examples, research papers, and tooling references** from a **Generative AI Cohort**, covering everything from **GenAI fundamentals** to **Advanced RAG, Graph Databases, LangGraph, and AI App Tracing**.
 
 ---
 
@@ -12,6 +12,7 @@ This repository contains **lecture-wise notes, code examples, research papers, a
 - [Lecture 5: Advanced RAG – Query Translation](#lecture-5-advanced-rag--query-translation)
 - [Lecture 6: Graph Databases](#lecture-6-graph-databases)
 - [Lecture 7: Tracing AI Applications](#lecture-7-tracing-ai-applications)
+- [Lecture 8: LangGraph & Agent Routing](#lecture-8-langgraph--agent-routing)
 
 ---
 
@@ -137,14 +138,51 @@ This repository contains **lecture-wise notes, code examples, research papers, a
 
 ---
 
+## Lecture 8: LangGraph & Agent Routing
+
+### Topics Covered
+- LangGraph fundamentals
+- State-based agent workflows
+- Conditional routing between nodes
+- Multi-step AI agents
+- Deterministic agent execution
+
+### Concepts Implemented
+- StateGraph with typed state
+- Router node for query classification
+- Coding vs conversational agent routing
+- JSON Schema–based structured outputs
+- Groq LLM integration (without Instructor)
+- LangSmith tracing for:
+  - Graph nodes
+  - Individual LLM calls
+
+### Code Highlights
+- Query classifier using Groq JSON Schema
+- Coding assistant node
+- Simple conversational assistant node
+- Conditional routing via LangGraph
+- Manual LLM tracing using `langsmith.trace`
+
+### Key Takeaways
+- LangGraph is ideal for **deterministic, production-grade agents**
+- JSON Schema guarantees **safe, structured LLM outputs**
+- Raw SDKs (Groq) require **manual LangSmith LLM tracing**
+- This pattern avoids tool-calling pitfalls and scales cleanly
+
+---
+
 ## 🛠️ Tech Stack & Tools
 - Python
 - LLMs (OpenAI / Open-Source Models)
+- Groq API
 - Hugging Face Transformers
 - Ollama
 - Vector Databases
 - Graph Databases
 - Docker & Docker Compose
+- LangGraph
+- LangSmith
 - Langfuse
 
 ---
@@ -154,6 +192,7 @@ This repository contains **lecture-wise notes, code examples, research papers, a
 2. Read notes before running code
 3. Use Docker configs for local setup
 4. Refer research papers for deeper understanding
+5. Explore LangGraph examples for real-world agent orchestration
 
 ---
 
